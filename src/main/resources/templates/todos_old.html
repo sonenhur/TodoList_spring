@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Todo List</title>
+    <style>
+        .completed {
+            text-decoration: line-through;
+            color: #888;
+        }
+        body { font-family: sans-serif; }
+        .container { max-width: 600px; margin: auto; padding: 20px; }
+        h1 { text-align: center; }
+        ul { list-style: none; padding: 0; }
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+        }
+        form { margin-top: 20px; text-align: center; }
+        input[type="text"] { width: 70%; padding: 8px; border: 1px solid #ccc; }
+        button { padding: 8px 15px; background: #007bff; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>나의 할 일 목록</h1>
+
+    <form th:action="@{/add}" method="post">
+        <input type="text" name="content" placeholder="새로운 할 일을 입력하세요" required>
+        <button type="submit">추가</button>
+    </form>
+
+    <ul>
+        <li th:each="todo : ${todos}">
+            <span th:text="${todo.content}" th:classappend="${todo.completed} ? 'completed'">Todo Item</span>
+            <div>
+                <form th:action="@{/toggle/{id}(id=${todo.id})}" method="post" style="display:inline;">
+                    <button type="submit">✓</button>
+                </form>
+                <form th:action="@{/delete/{id}(id=${todo.id})}" method="post" style="display:inline;">
+                    <button type="submit">❌</button>
+                </form>
+            </div>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

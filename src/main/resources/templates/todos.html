@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Todo List</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div class="container">
+    <h1>나의 할 일 목록</h1>
+
+    <form th:action="@{/add}" method="post" class="add-todo-form">
+        <input type="text" name="content" placeholder="새로운 할 일을 입력하세요" required>
+        <button type="submit">추가</button>
+    </form>
+
+    <ul class="todo-list">
+        <li th:each="todo : ${todos}" th:classappend="${todo.completed} ? 'completed'">
+            <div class="todo-view">
+                <span class="todo-content" th:text="${todo.content}">Todo Item</span>
+                <div class="actions">
+                    <form th:action="@{/toggle/{id}(id=${todo.id})}" method="post">
+                        <button type="submit" class="toggle-btn">✓</button>
+                    </form>
+                    <button class="edit-btn">수정</button>
+                    <form th:action="@{/delete/{id}(id=${todo.id})}" method="post">
+                        <button type="submit" class="delete-btn">❌</button>
+                    </form>
+                </div>
+            </div>
+
+            <form th:action="@{/edit/{id}(id=${todo.id})}" method="post" class="edit-form">
+                <input type="text" name="content" th:value="${todo.content}" required>
+                <div class="btn-group">
+                    <button type="submit" class="save-btn">저장</button>
+                    <button type="button" class="cancel-btn">취소</button>
+                </div>
+            </form>
+        </li>
+    </ul>
+</div>
+
+<script>
+    document.querySelectorAll('.edit-btn').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const li = event.target.closest('li');
+            li.querySelector('.todo-view').style.display = 'none';
+            li.querySelector('.edit-form').style.display = 'flex';
+        });
+    });
+
+    document.querySelectorAll('.cancel-btn').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const li = event.target.closest('li');
+            li.querySelector('.todo-view').style.display = 'flex';
+            li.querySelector('.edit-form').style.display = 'none';
+        });
+    });
+</script>
+</body>
+</html>
